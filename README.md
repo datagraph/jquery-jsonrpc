@@ -69,7 +69,7 @@ file before contributing.
 #### Thanks
 Inspiration for this plugin came from the following existing plugins:
 
-* [http://plugins.jquery.com/project/C4PCJsonRPC][http://plugins.jquery.com/project/C4PCJsonRPC]
-* [http://plugins.jquery.com/project/jsonRPC2][http://plugins.jquery.com/project/jsonRPC2]
+* [http://plugins.jquery.com/project/C4PCJsonRPC](http://plugins.jquery.com/project/C4PCJsonRPC)
+* [http://plugins.jquery.com/project/jsonRPC2](http://plugins.jquery.com/project/jsonRPC2)
 
-Thanks to [safchain][http://plugins.jquery.com/users/safchain] and [kusmierz][http://plugins.jquery.com/user/30124] for their efforts.
+Thanks to [safchain](http://plugins.jquery.com/users/safchain) and [kusmierz](http://plugins.jquery.com/user/30124) for their efforts.
