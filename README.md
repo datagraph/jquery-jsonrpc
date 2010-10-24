@@ -1,6 +1,6 @@
 # jQuery JSON RPC 2.0
 
-A JSON RPC 2.0 compatible jQuery plugin.
+A JSON RPC 2.0 compatible client library and jQuery plugin.
 
 ## Getting Started
 
@@ -49,7 +49,7 @@ Need to temporarily override your end point or namespace?  Easy enough...
       this.request('method.name');
     });
 
-And after your call, your entPoint and namespace are back to their defaults.  Or you can override the end point for a single request via
+And after your call, your endPoint and namespace are back to their defaults.  Or you can override the end point for a single request via
 
     $.jsonRPC.request('method.name', [1,2,3], null, '/anotherEndPoint');
 
@@ -69,7 +69,7 @@ file before contributing.
 #### Thanks
 Inspiration for this plugin came from the following existing plugins:
 
-* http://plugins.jquery.com/project/C4PCJsonRPC
-* http://plugins.jquery.com/project/jsonRPC2
+* [http://plugins.jquery.com/project/C4PCJsonRPC][http://plugins.jquery.com/project/C4PCJsonRPC]
+* [http://plugins.jquery.com/project/jsonRPC2][http://plugins.jquery.com/project/jsonRPC2]
 
-Thanks to [safchain]:http://plugins.jquery.com/users/safchain and [kusmierz]:http://plugins.jquery.com/user/30124 for their efforts.
+Thanks to [safchain][http://plugins.jquery.com/users/safchain] and [kusmierz][http://plugins.jquery.com/user/30124] for their efforts.
