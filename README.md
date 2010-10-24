@@ -67,9 +67,7 @@ Fork it on Github and go.  Please make sure you're kosher with the UNLICENSE
 file before contributing.
 
 #### Thanks
-Inspiration for this plugin came from the following existing plugins:
+Inspiration for this plugin came from (and is partly based on) the following existing plugins:
 
-* [http://plugins.jquery.com/project/C4PCJsonRPC](http://plugins.jquery.com/project/C4PCJsonRPC)
-* [http://plugins.jquery.com/project/jsonRPC2](http://plugins.jquery.com/project/jsonRPC2)
-
-Thanks to [safchain](http://plugins.jquery.com/users/safchain) and [kusmierz](http://plugins.jquery.com/user/30124) for their efforts.
+* [http://plugins.jquery.com/project/C4PCJsonRPC](http://plugins.jquery.com/project/C4PCJsonRPC) via [safchain](http://plugins.jquery.com/users/safchain)
+* [http://plugins.jquery.com/project/jsonRPC2](http://plugins.jquery.com/project/jsonRPC2) via [kusmierz](http://plugins.jquery.com/user/30124)
