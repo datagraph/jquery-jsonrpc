@@ -4,16 +4,14 @@
       // RPC Version Number
       version: '2.0',
 
-      // End point path, sets a default for all requests
-      // This can be initialized in the setup manually, via
-      // the setup method or overriden on a per request basis
+      // End point URL, sets default in requests if not
+      // specified with the request call
       endPoint: null,
 
-      // Default namespace for methods, this can be set manually
-      // or via the setup method
+      // Default namespace for methods
       namespace: null,
 
-      // Setup the endPoint and namespace params with defaults
+      // Setup the endPoint and namespace params
       setup: function(params) {
         if(typeof(params) !== 'undefined') {
           if (typeof(params.endPoint) !== 'endPoint') this.endPoint = params.endPoint;
@@ -22,7 +20,7 @@
       },
 
       // Convenience wrapper method to allow you to temporarily set a config parameter
-      // (endPoint or namespace) for RPC calls performed within the passed in callback
+      // (endPoint or namespace) and ensure it gets set back to what it was before
       withOptions: function(params, callback) {
         origParams = {endPoint: this.endPoint, namespace: this.namespace};
         this.setup(params);
