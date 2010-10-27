@@ -52,7 +52,6 @@
           request = requests[i];
           data.push(this._requestDataObj(request.method, request.params, i+1));
         }
-        console.log(JSON.stringify(data));
 
         this._doRequest(JSON.stringify(data), callbacks, url);
       },
@@ -101,6 +100,7 @@
 
       // Handles calling of RPC success, calls error callback
       // if the response contains an error
+      // TODO: Handle error checking for batch requests
       _requestSuccess: function(callbacks, json) {
         var response = this._response(json);
         response.error && callbacks.error ? callbacks.error(response) : null;
@@ -121,7 +121,8 @@
               json = eval ( '(' + json + ')' );
             }
 
-            if (json.jsonrpc != '2.0') {
+            if (($.isArray(json) && json.length > 0 && json[0].jsonrpc != '2.0') || 
+                (!$.isArray(json) && json.jsonrpc != '2.0')) {
               throw 'Version error';
             }
 
