@@ -53,6 +53,10 @@ And after your call, your endPoint and namespace are back to their defaults.  Or
 
     $.jsonRPC.request('method.name', [1,2,3], null, '/anotherEndPoint');
 
+## Run the tests
+
+Tests have been written using QUnit.  You can run the tests [here](http://github.com/datagraph/jquery-jsonrpc/raw/master/test/index.html).
+
 ## Authors, Development, License, Thanks
 
 #### Authors
