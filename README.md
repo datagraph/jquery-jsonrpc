@@ -1,6 +1,6 @@
-# jQuery JSON RPC 2.0
+# JSON RPC 2.0 jQuery Plugin
 
-A JSON RPC 2.0 compatible client library and jQuery plugin.
+A [JSON RPC 2.0](http://groups.google.com/group/json-rpc/web/json-rpc-2-0) compatible client library and jQuery plugin.
 
 ## Getting Started
 
