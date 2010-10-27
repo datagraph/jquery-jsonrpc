@@ -53,11 +53,7 @@ And after your call, your endPoint and namespace are back to their defaults.  Or
 
     $.jsonRPC.request('method.name', [1,2,3], null, '/anotherEndPoint');
 
-## Run the tests
-
-Tests have been written using QUnit.  You can run the tests locally from the tests.
-
-## Authors, Development, License, Thanks
+## Authors, License, Development, Thanks
 
 #### Authors
  * Josh Huckabee <joshhuckabee@gmail.com>
@@ -66,9 +62,12 @@ Tests have been written using QUnit.  You can run the tests locally from the tes
 This plugin is free and unemcumbered software released into the public
 domain.  For more information, see the included UNLICENSE file.
 
-#### Contributing
+#### Development / Contributing
 Fork it on Github and go.  Please make sure you're kosher with the UNLICENSE
 file before contributing.
+
+Add your tests (see test directory), make sure they all pass, and submit
+a pull request.
 
 #### Thanks
 Inspiration for this plugin came from (and is partly based on) the following existing plugins:
