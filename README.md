@@ -55,7 +55,7 @@ And after your call, your endPoint and namespace are back to their defaults.  Or
 
 ## Run the tests
 
-Tests have been written using QUnit.  You can run the tests locally from the tests directory or from [here](http://github.com/datagraph/jquery-jsonrpc/raw/master/test/index.html).
+Tests have been written using QUnit.  You can run the tests locally from the tests directory or from [here](http://datagraph.github.com/jquery-jsonrpc).
 
 ## Authors, Development, License, Thanks
 
