@@ -11,7 +11,13 @@
       // Default namespace for methods
       namespace: null,
 
-      // Setup the endPoint and namespace params
+      /*
+       * Provides the RPC client with an optional default endpoint and namespace
+       *
+       * @param {object} The params object which can contains
+       *   {string} endPoint The default endpoint for RPC requests
+       *   {string} namespace The default namespace for RPC requests
+       */
       setup: function(params) {
         this._validateConfigParams(params);
         this.endPoint = params.endPoint;
@@ -19,8 +25,15 @@
         return this;
       },
 
-      // Convenience wrapper method to allow you to temporarily set a config parameter
-      // (endPoint or namespace) and ensure it gets set back to what it was before
+      /*
+       * Convenience wrapper method to allow you to temporarily set a config parameter
+       * (endPoint or namespace) and ensure it gets set back to what it was before
+       *
+       * @param {object} The params object which can contains
+       *   {string} endPoint The default endpoint for RPC requests
+       *   {string} namespace The default namespace for RPC requests
+       * @param {function} callback The function to call with the new params in place
+       */
       withOptions: function(params, callback) {
         this._validateConfigParams(params);
         // No point in running if there isn't a callback received to run
@@ -32,34 +45,61 @@
         this.setup(origParams);
       },
 
-      // Performas a single RPC request
-      request: function(method, params, callbacks, url) {
-        // Validate or method arguments
+      /*
+       * Performas a single RPC request
+       *
+       * @param {string} method The name of the rpc method to be called
+       * @param {object} options A collection of object which can contains
+       *  params {array} the params array to send along with the request
+       *  success {function} a function that will be executed if the request succeeds
+       *  error {function} a function that will be executed if the request fails
+       *  url {string} the url to send the request to
+       * @return {undefined}
+       */
+      request: function(method, options) {
+        if(typeof(options) === 'undefined') {
+          options = {};
+        }
+
+        // Validate method arguments
         this._validateRequestMethod(method);
-        this._validateRequestParams(params);
-        this._validateRequestCallbacks(callbacks);
+        this._validateRequestParams(options.params);
+        this._validateRequestCallbacks(options.success, options.error);
 
         // Perform the actual request
-        this._doRequest(JSON.stringify(this._requestDataObj(method, params, 1)),
-                        callbacks,
-                        url);
-        
+        this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, 1)), options);
+
         return true;
       },
 
-      // Submits multiple requests
-      // Takes an array of objects that contain a method and params
-      batchRequest: function(requests, callbacks, url) {
+      /*
+       * Submits multiple requests
+       * Takes an array of objects that contain a method and params
+       *
+       * @params {array} requests an array of request object which can contain
+       *  method {string} the name of the method
+       *  param {object} the params object to be sent with the request
+       * @param {object} options A collection of object which can contains
+       *  success {function} a function that will be executed if the request succeeds
+       *  error {function} a function that will be executed if the request fails
+       *  url {string} the url to send the request to
+       * @return {undefined}
+       */
+      batchRequest: function(requests, options) {
+        if(typeof(options) === 'undefined') {
+          options = {};
+        }
+
         // Ensure our requests come in as an array
         if(!$.isArray(requests) || requests.length === 0) throw("Invalid requests supplied for jsonRPC batchRequest. Must be an array object that contain at least a method attribute");
-        
+
         // Make sure each of our request objects are valid
         var _that = this;
         $.each(requests, function(i, req) {
           _that._validateRequestMethod(req.method);
           _that._validateRequestParams(req.params);
         });
-        this._validateRequestCallbacks(callbacks);
+        this._validateRequestCallbacks(options.success, options.error);
 
         var data = [],
             request;
@@ -70,7 +110,7 @@
           data.push(this._requestDataObj(request.method, request.params, i+1));
         }
 
-        this._doRequest(JSON.stringify(data), callbacks, url);
+        this._doRequest(JSON.stringify(data), options);
       },
 
       // Validate a params hash
@@ -87,7 +127,7 @@
           }
         }
       },
-      
+
       // Request method must be a string
       _validateRequestMethod: function(method) {
         if(typeof(method) !== 'string') throw("Invalid method supplied for jsonRPC request")
@@ -105,33 +145,31 @@
         return true;
       },
 
-      _validateRequestCallbacks: function(callbacks) {
+      _validateRequestCallbacks: function(success, error) {
         // Make sure callbacks are either empty or a function
-        if(typeof(callbacks) !== 'undefined') {
-          if(typeof(callbacks.error) !== 'undefined' &&
-             typeof(callbacks.error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
-          if(typeof(callbacks.success) !== 'undefined' &&
-             typeof(callbacks.success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
-        }
+        if(typeof(success) !== 'undefined' &&
+           typeof(success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
+        if(typeof(error) !== 'undefined' &&
+         typeof(error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
         return true;
       },
 
       // Internal method used for generic ajax requests
-      _doRequest: function(data, callbacks, url) {
+      _doRequest: function(data, options) {
         var _that = this;
         $.ajax({
           type: 'POST',
           dataType: 'json',
           contentType: 'application/json',
-          url: this._requestUrl(url),
+          url: this._requestUrl(options.url),
           data: data,
           cache: false,
           processData: false,
           error: function(json) {
-            _that._requestError.call(_that, callbacks, json);
+            _that._requestError.call(_that, json, options.error);
           },
           success: function(json) {
-            _that._requestSuccess.call(_that, callbacks, json);
+            _that._requestSuccess.call(_that, json, options.success, options.error);
           }
         })
       },
@@ -144,36 +182,39 @@
 
       // Creates an RPC suitable request object
       _requestDataObj: function(method, params, id) {
-        return {
+        var dataObj = {
           jsonrpc: this.version,
           method: this.namespace ? this.namespace +'.'+ method : method,
-          params: params,
           id: id
         }
+        if(typeof(params) !== 'undefined') {
+          dataObj.params = params;
+        }
+        return dataObj;
       },
 
       // Handles calling of error callback function
-      _requestError: function(callbacks, json) {
-        if (typeof(callbacks) !== 'undefined' && typeof(callbacks.error) === 'function') {
-            callbacks.error(this._response());
+      _requestError: function(json, error) {
+        if (typeof(error) !== 'undefined' && typeof(error) === 'function') {
+            error(this._response());
         }
       },
 
       // Handles calling of RPC success, calls error callback
       // if the response contains an error
       // TODO: Handle error checking for batch requests
-      _requestSuccess: function(callbacks, json) {
+      _requestSuccess: function(json, success, error) {
         var response = this._response(json);
 
         // If we've encountered an error in the response, trigger the error callback if it exists
-        if(response.error && typeof(callbacks) !=='undefined' && typeof(callbacks.error) !== 'undefined') {
-          callbacks.error(response);
+        if(response.error && typeof(error) === 'function') {
+          error(response);
           return;
         }
 
         // Otherwise, successful request, run the success request if it exists
-        if(typeof(callbacks) !== 'undefined' && typeof(callbacks.success) !== 'undefined') {
-          callbacks.success ? callbacks.success(response) : null;
+        if(typeof(success) === 'function') {
+          success(response);
         }
       },
 
@@ -191,7 +232,7 @@
               json = eval ( '(' + json + ')' );
             }
 
-            if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') || 
+            if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
                 (!$.isArray(json) && json.jsonrpc !== '2.0')) {
               throw 'Version error';
             }

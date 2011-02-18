@@ -15,9 +15,12 @@ The simplest way to configure jsonRPC is via the setup method
       namespace: 'datagraph'
     });
 
+This will set a default endpoint and namespace for all subsequent requests.
+
 Once you've configured an end point, making requests is a matter of
 
-    $.jsonRPC.request('method.name', params, {
+    $.jsonRPC.request('method.name', {
+      params: params, 
       success: function(result) {
         // Do something with the result here
         // It comes back as an RPC 2.0 compatible response object
@@ -53,9 +56,12 @@ Need to temporarily override your end point or namespace?  Easy enough...
       this.request('method.name');
     });
 
-And after your call, your endPoint and namespace are back to their defaults.  Or you can override the end point for a single request via
+After your call, your endPoint and namespace are back to their defaults.  Or you can override the end point for a single request via
 
-    $.jsonRPC.request('method.name', [1,2,3], null, '/anotherEndPoint');
+    $.jsonRPC.request('method.name', {
+      params: [1,2,3]
+      endPoint: '/anotherEndPoint'
+    });
 
 ## Authors, License, Development, Thanks
 

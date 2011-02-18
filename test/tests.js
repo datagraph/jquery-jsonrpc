@@ -126,7 +126,7 @@ $(document).ready(function(){
   test("with a valid method and invalid params", function() {
     var errMsg = false;
     try {
-      $.jsonRPC.request('test', '');
+      $.jsonRPC.request('test', {params: ''});
     }
     catch(e) {
       errMsg = e;
@@ -144,29 +144,32 @@ $(document).ready(function(){
   test("with a valid method and param and no callbacks", function() {
     stop();
     $.jsonRPC.endPoint = 'data/valid.js'
-    ok($.jsonRPC.request('test'), []);
-    ok($.jsonRPC.request('test'), {});
-    ok($.jsonRPC.request('test'), null);
+    ok($.jsonRPC.request('test'), {params: []});
+    ok($.jsonRPC.request('test'), {params: {}});
+    ok($.jsonRPC.request('test'), {params: null});
     start();
   });
 
-  test("with a valid method, null params, and invalid callbacks", function() {
+  test("with a valid method, no params, and invalid callbacks", function() {
     expect(6);
 
-    var callbacks = [
-        {error: null},
-        {error: ''},
-        {error: []},
-        {success: null},
-        {success: ''},
-        {success: []}
-      ],
-      errMsg;
+    var callbacks = [null, '', []],
+        errMsg;
 
-    $.each(callbacks, function(i, callback) {
+    $.each(callbacks, function(i, callbackFunction) {
       errMsg = false;
       try {
-        $.jsonRPC.request('test', null, {error:null});
+        $.jsonRPC.request('test', {error:callbackFunction});
+      }
+      catch(e) {
+        errMsg = e;
+      }
+      ok(errMsg, "should raise an error");
+    });
+    $.each(callbacks, function(i, callbackFunction) {
+      errMsg = false;
+      try {
+        $.jsonRPC.request('test', {success:callbackFunction});
       }
       catch(e) {
         errMsg = e;
@@ -175,11 +178,11 @@ $(document).ready(function(){
     });
   });
 
-  test("with a valid method, null params, and valid callbacks on success", function() {
+  test("with a valid method, no params, and valid callbacks on success", function() {
     expect(1);
     stop();
     $.jsonRPC.endPoint = 'data/valid.js'
-    $.jsonRPC.request('test', ['param'], {
+    $.jsonRPC.request('test', {
       error: function(json) {
         ok(false, "should not execute this");
         start();
@@ -191,11 +194,11 @@ $(document).ready(function(){
     });
   });
 
-  test("with a valid method, null params, and valid callbacks on error", function() {
+  test("with a valid method, no params, and valid callbacks on error", function() {
     expect(1);
     stop();
     $.jsonRPC.endPoint = 'data/invalid.js'
-    $.jsonRPC.request('test', ['param'], {
+    $.jsonRPC.request('test', {
       error: function(json) {
         ok(json, "should execute error callback");
         start();
@@ -211,7 +214,9 @@ $(document).ready(function(){
     expect(1);
     stop();
     $.jsonRPC.endPoint = 'data/invalid.js'
-    $.jsonRPC.request('test', ['param'], {
+    $.jsonRPC.request('test', {
+      params: ['param'],
+      url: 'data/valid.js',
       error: function(json) {
         ok(false, "should not execute error callback");
         start();
@@ -220,7 +225,7 @@ $(document).ready(function(){
         ok(true, "should execute success callback");
         start();
       }
-    }, 'data/valid.js');
+    });
     
   });
 
@@ -258,6 +263,7 @@ $(document).ready(function(){
     $.jsonRPC.batchRequest([
       {method: 'test', params: ['param']}
       ], {
+      url: 'data/valid_batch.js',
       error: function(json) {
         ok(false, "should not execute error callback");
         start();
@@ -266,7 +272,7 @@ $(document).ready(function(){
         ok(true, "should execute success callback");
         start();
       }
-    }, 'data/valid_batch.js');
+    });
     
   });
 
