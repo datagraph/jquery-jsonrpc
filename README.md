@@ -2,6 +2,10 @@
 
 A [JSON RPC 2.0](http://groups.google.com/group/json-rpc/web/json-rpc-2-0) compatible client library and jQuery plugin.
 
+## First, a quick compatibility note
+
+If you need to support IE6 & IE7, you will need to include Douglas Crockford's [JSON](https://github.com/douglascrockford/JSON-js) library in order for this plugin to work.  The specific file you need from that repository is in json2.js.
+
 ## Getting Started
 
 The simplest way to configure jsonRPC is via the setup method
