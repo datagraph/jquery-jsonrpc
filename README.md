@@ -59,7 +59,7 @@ Need to temporarily override your end point or namespace?  Easy enough...
 After your call, your endPoint and namespace are back to their defaults.  Or you can override the end point for a single request via
 
     $.jsonRPC.request('method.name', {
-      params: [1,2,3]
+      params: [1,2,3],
       endPoint: '/anotherEndPoint'
     });
 
