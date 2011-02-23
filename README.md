@@ -1,6 +1,6 @@
 # JSON RPC 2.0 jQuery Plugin
 
-A [JSON RPC 2.0](http://groups.google.com/group/json-rpc/web/json-rpc-2-0) compatible client library and jQuery plugin.
+A [JSON RPC 2.0](http://groups.google.com/group/json-rpc/web/json-rpc-2-0) compatible client library and jQuery (1.4 and 1.5 compatible) plugin.
 
 ## First, a quick compatibility note
 
@@ -20,7 +20,7 @@ This will set a default endpoint and namespace for all subsequent requests.
 Once you've configured an end point, making requests is a matter of
 
     $.jsonRPC.request('method.name', {
-      params: params, 
+      params: params,
       success: function(result) {
         // Do something with the result here
         // It comes back as an RPC 2.0 compatible response object
@@ -40,7 +40,7 @@ Want to do batch requests?  We've got you covered
         {
           method: 'method.two'
         }
-      ], { 
+      ], {
         success: function(result) {
           // Handle response object here
         }
@@ -62,6 +62,10 @@ After your call, your endPoint and namespace are back to their defaults.  Or you
       params: [1,2,3],
       endPoint: '/anotherEndPoint'
     });
+
+## Running the tests
+
+The tests currently rely on being able to successfully make remote calls to load simulated RPC requests.  This requires that the tests be served on a proper web server like Apache, Nginx, or Lighttpd.  Tests have been verified against jQuery 1.4.3, jQuery 1.4.4, and jQuery 1.5.
 
 ## Authors, License, Development, Thanks
 
