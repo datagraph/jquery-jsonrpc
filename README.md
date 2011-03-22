@@ -4,7 +4,7 @@ A [JSON RPC 2.0](http://groups.google.com/group/json-rpc/web/json-rpc-2-0) compa
 
 ## First, a quick compatibility note
 
-If you need to support IE6 & IE7, you will need to include Douglas Crockford's [JSON](https://github.com/douglascrockford/JSON-js) library in order for this plugin to work.  The specific file you need from that repository is in json2.js.
+If you need to support IE6 & IE7, you will need to include Douglas Crockford's [JSON](https://github.com/douglascrockford/JSON-js) library in order for this plugin to work.  The specific file you need from that repository is json2.js.
 
 ## Getting Started
 
@@ -65,7 +65,7 @@ After your call, your endPoint and namespace are back to their defaults.  Or you
 
 ## Running the tests
 
-The tests currently rely on being able to successfully make remote calls to load simulated RPC requests.  This requires that the tests be served on a proper web server like Apache, Nginx, or Lighttpd.  Tests have been verified against jQuery 1.4.3, jQuery 1.4.4, and jQuery 1.5.
+The tests currently rely on being able to successfully make local AJAX calls to load test data. This works fine in Firefox 3.6, but WebKit (Chrome and Safari) does not allow file-based AJAX calls. To run successfully run tests in Safari or Chrome, you will need to serve the tests from a proper web server like Apache or Nginx. The tests have been verified against jQuery 1.4.3, jQuery 1.4.4, and jQuery 1.5.
 
 ## Authors, License, Development, Thanks
 
