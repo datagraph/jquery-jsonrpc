@@ -54,6 +54,7 @@
        *  success {function} a function that will be executed if the request succeeds
        *  error {function} a function that will be executed if the request fails
        *  url {string} the url to send the request to
+       *  jsonp {boolean} whether to use jsonp or not
        * @return {undefined}
        */
       request: function(method, options) {
@@ -83,6 +84,7 @@
        *  success {function} a function that will be executed if the request succeeds
        *  error {function} a function that will be executed if the request fails
        *  url {string} the url to send the request to
+       *  jsonp {boolean} whether to use jsonp or not
        * @return {undefined}
        */
       batchRequest: function(requests, options) {
@@ -156,12 +158,20 @@
 
       // Internal method used for generic ajax requests
       _doRequest: function(data, options) {
-        var _that = this;
+        var _that = this,
+            url = this._requestUrl(options.url),
+            dataType = (!typeof(options.jsonp) !== 'undefined' && options.jsonp ? 'jsonp' : 'json');
+
+        // Make sure callback param is set for jsonp requests
+        if (dataType === 'jsonp') {
+          url = url + "&callback=?"
+        }
+
         $.ajax({
           type: 'POST',
           dataType: 'json',
           contentType: 'application/json',
-          url: this._requestUrl(options.url),
+          url: url,
           data: data,
           cache: false,
           processData: false,
@@ -177,7 +187,7 @@
       // Determines the appropriate request URL to call for a request
       _requestUrl: function(url) {
         url = url || this.endPoint;
-        return url + '?tm=' + new Date().getTime()
+        return url + '?tm=' + new Date().getTime();
       },
 
       // Creates an RPC suitable request object

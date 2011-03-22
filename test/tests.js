@@ -276,4 +276,20 @@ $(document).ready(function(){
     
   });
 
+  module("jsonp");
+
+  test("with valid method, param, and valid callback", function() {
+    stop();
+    $.jsonRPC.endPoint = 'http://localhost:8089/jsonp/data.js'
+    ok($.jsonRPC.request('test', {
+      jsonp: true,
+      success: function(json) {
+        console.log(json);
+        ok(true, "should execute success callback");
+        start();
+      }
+    }));
+    start();
+  });
+
 });
