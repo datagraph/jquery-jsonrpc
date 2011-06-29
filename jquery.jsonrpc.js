@@ -46,7 +46,7 @@
       },
 
       /*
-       * Performas a single RPC request
+       * Performs a single RPC request
        *
        * @param {string} method The name of the rpc method to be called
        * @param {object} options A collection of object which can contains
@@ -54,11 +54,15 @@
        *  success {function} a function that will be executed if the request succeeds
        *  error {function} a function that will be executed if the request fails
        *  url {string} the url to send the request to
+       * @param {string} the JSON-RPC provenance id for this request
        * @return {undefined}
        */
-      request: function(method, options) {
+      request: function(method, options, id) {
         if(typeof(options) === 'undefined') {
           options = {};
+        }
+        if(typeof(id) === 'undefined') {
+          id = 1;
         }
 
         // Validate method arguments
@@ -67,7 +71,7 @@
         this._validateRequestCallbacks(options.success, options.error);
 
         // Perform the actual request
-        this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, 1)), options);
+        this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, id)), options);
 
         return true;
       },
