@@ -65,7 +65,7 @@ After your call, your endPoint and namespace are back to their defaults.  Or you
 
 ## Running the tests
 
-The tests currently rely on being able to successfully make local AJAX calls to load test data. This works fine in Firefox 3.6, but WebKit (Chrome and Safari) does not allow file-based AJAX calls. To successfully run tests in Safari or Chrome, you will need to serve the tests from a proper web server like Apache or Nginx. The tests have been verified against jQuery 1.4.3, jQuery 1.4.4, and jQuery 1.5.
+The tests currently rely on being able to successfully make local AJAX calls to load test data. This works fine in Firefox 3.64, and 5, but WebKit (Chrome and Safari) does not allow file-based AJAX calls. To successfully run tests in Safari or Chrome, you will need to serve the tests from a proper web server like Apache or Nginx. The tests have been verified against jQuery 1.4, 1.5, and 1.6.
 
 ## Authors, License, Development, Thanks
 
