@@ -54,11 +54,15 @@
        *  success {function} a function that will be executed if the request succeeds
        *  error {function} a function that will be executed if the request fails
        *  url {string} the url to send the request to
+       *  id {string} the provenance id for this request (defaults to 1)
        * @return {undefined}
        */
       request: function(method, options) {
         if(typeof(options) === 'undefined') {
-          options = {};
+          options = { id: 1 };
+        }
+        if (typeof(options.id) === 'undefined') {
+          options.id = 1;
         }
 
         // Validate method arguments
@@ -67,7 +71,7 @@
         this._validateRequestCallbacks(options.success, options.error);
 
         // Perform the actual request
-        this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, 1)), options);
+        this._doRequest(JSON.stringify(this._requestDataObj(method, options.params, options.id)), options);
 
         return true;
       },
@@ -79,6 +83,7 @@
        * @params {array} requests an array of request object which can contain
        *  method {string} the name of the method
        *  param {object} the params object to be sent with the request
+       *  id {string} the provenance id for the request (defaults to an incrementer starting at 1)
        * @param {object} options A collection of object which can contains
        *  success {function} a function that will be executed if the request succeeds
        *  error {function} a function that will be executed if the request fails
@@ -98,6 +103,9 @@
         $.each(requests, function(i, req) {
           _that._validateRequestMethod(req.method);
           _that._validateRequestParams(req.params);
+          if (typeof(req.id) === 'undefined') {
+            req.id = i + 1;
+          }
         });
         this._validateRequestCallbacks(options.success, options.error);
 
@@ -107,7 +115,7 @@
         // Prepare our request object
         for(var i = 0; i<requests.length; i++) {
           request = requests[i];
-          data.push(this._requestDataObj(request.method, request.params, i+1));
+          data.push(this._requestDataObj(request.method, request.params, request.id));
         }
 
         this._doRequest(JSON.stringify(data), options);
