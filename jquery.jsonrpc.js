@@ -167,6 +167,7 @@
         var _that = this;
         $.ajax({
           type: 'POST',
+          async: false !== options.async,
           dataType: 'json',
           contentType: 'application/json',
           url: this._requestUrl(options.url),
