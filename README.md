@@ -71,6 +71,7 @@ The tests currently rely on being able to successfully make local AJAX calls to 
 
 #### Authors
  * Josh Huckabee <joshhuckabee@gmail.com>
+ * Chris Petersen <cpetersen@mythtv.org>
 
 #### 'License'
 This plugin is free and unemcumbered software released into the public
