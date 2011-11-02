@@ -17,11 +17,16 @@
        * @param {object} The params object which can contain
        *   endPoint {string} The default endpoint for RPC requests
        *   namespace {string} The default namespace for RPC requests
+       *   cache {boolean} If set to false, it will force requested
+       *       pages not to be cached by the browser. Setting cache
+       *       to false also appends a query string parameter,
+       *       "_=[TIMESTAMP]", to the URL. (Default: true)
        */
       setup: function(params) {
         this._validateConfigParams(params);
         this.endPoint = params.endPoint;
         this.namespace = params.namespace;
+        this.cache = params.cache !== undefined ? cache : true;
         return this;
       },
 
@@ -55,6 +60,11 @@
        *  error {function} a function that will be executed if the request fails
        *  url {string} the url to send the request to
        *  id {string} the provenance id for this request (defaults to 1)
+       *  cache {boolean} If set to false, it will force requested
+       *       pages not to be cached by the browser. Setting cache
+       *       to false also appends a query string parameter,
+       *       "_=[TIMESTAMP]", to the URL. (Default: cache value
+       *       set with the setup method)
        * @return {undefined}
        */
       request: function(method, options) {
@@ -63,6 +73,9 @@
         }
         if (options.id === undefined) {
           options.id = 1;
+        }
+        if (options.cache === undefined) {
+          options.cache = this.cache;
         }
 
         // Validate method arguments
@@ -170,9 +183,9 @@
           async: false !== options.async,
           dataType: 'json',
           contentType: 'application/json',
-          url: this._requestUrl(options.url),
+          url: this._requestUrl(options.url, options.cache),
           data: data,
-          cache: false,
+          cache: options.cache,
           processData: false,
           error: function(json) {
             _that._requestError.call(_that, json, options.error);
@@ -184,9 +197,12 @@
       },
 
       // Determines the appropriate request URL to call for a request
-      _requestUrl: function(url) {
+      _requestUrl: function(url, cache) {
         url = url || this.endPoint;
-        return url + '?tm=' + new Date().getTime()
+        if (cache) {
+            url += '?tm=' + new Date().getTime();
+        }
+        return url;
       },
 
       // Creates an RPC suitable request object
