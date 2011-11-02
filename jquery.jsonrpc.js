@@ -199,7 +199,7 @@
       // Determines the appropriate request URL to call for a request
       _requestUrl: function(url, cache) {
         url = url || this.endPoint;
-        if (cache) {
+        if (!cache) {
             url += '?tm=' + new Date().getTime();
         }
         return url;
