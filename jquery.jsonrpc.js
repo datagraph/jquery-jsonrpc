@@ -1,4 +1,4 @@
-(function($) {
+(function($, undefined) {
   $.extend({
     jsonRPC: {
       // RPC Version Number
@@ -37,7 +37,7 @@
       withOptions: function(params, callback) {
         this._validateConfigParams(params);
         // No point in running if there isn't a callback received to run
-        if(typeof(callback) === 'undefined') throw("No callback specified");
+        if(callback === undefined) throw("No callback specified");
 
         origParams = {endPoint: this.endPoint, namespace: this.namespace};
         this.setup(params);
@@ -58,10 +58,10 @@
        * @return {undefined}
        */
       request: function(method, options) {
-        if(typeof(options) === 'undefined') {
+        if(options === undefined) {
           options = { id: 1 };
         }
-        if (typeof(options.id) === 'undefined') {
+        if (options.id === undefined) {
           options.id = 1;
         }
 
@@ -91,7 +91,7 @@
        * @return {undefined}
        */
       batchRequest: function(requests, options) {
-        if(typeof(options) === 'undefined') {
+        if(options === undefined) {
           options = {};
         }
 
@@ -103,7 +103,7 @@
         $.each(requests, function(i, req) {
           _that._validateRequestMethod(req.method);
           _that._validateRequestParams(req.params);
-          if (typeof(req.id) === 'undefined') {
+          if (req.id === undefined) {
             req.id = i + 1;
           }
         });
@@ -123,7 +123,7 @@
 
       // Validate a params hash
       _validateConfigParams: function(params) {
-        if(typeof(params) === 'undefined') {
+        if(params === undefined) {
           throw("No params specified");
         }
         else {
@@ -145,7 +145,7 @@
       // Validate request params.  Must be a) empty, b) an object (e.g. {}), or c) an array
       _validateRequestParams: function(params) {
         if(!(params === null ||
-             typeof(params) === 'undefined' ||
+             params === undefined ||
              typeof(params) === 'object' ||
              $.isArray(params))) {
           throw("Invalid params supplied for jsonRPC request. It must be empty, an object or an array.");
@@ -155,9 +155,9 @@
 
       _validateRequestCallbacks: function(success, error) {
         // Make sure callbacks are either empty or a function
-        if(typeof(success) !== 'undefined' &&
+        if(success !== undefined &&
            typeof(success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
-        if(typeof(error) !== 'undefined' &&
+        if(error !== undefined &&
          typeof(error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
         return true;
       },
@@ -196,7 +196,7 @@
           method: this.namespace ? this.namespace +'.'+ method : method,
           id: id
         }
-        if(typeof(params) !== 'undefined') {
+        if(params !== undefined) {
           dataObj.params = params;
         }
         return dataObj;
@@ -204,7 +204,7 @@
 
       // Handles calling of error callback function
       _requestError: function(json, error) {
-        if (typeof(error) !== 'undefined' && typeof(error) === 'function') {
+        if (error !== undefined && typeof(error) === 'function') {
             error(this._response());
         }
       },
@@ -229,7 +229,7 @@
 
       // Returns a generic RPC 2.0 compatible response object
       _response: function(json) {
-        if (typeof(json) === 'undefined') {
+        if (json === undefined) {
           return {
             error: 'Internal server error',
             version: '2.0'
