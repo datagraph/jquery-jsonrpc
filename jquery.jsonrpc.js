@@ -14,9 +14,9 @@
       /*
        * Provides the RPC client with an optional default endpoint and namespace
        *
-       * @param {object} The params object which can contains
-       *   {string} endPoint The default endpoint for RPC requests
-       *   {string} namespace The default namespace for RPC requests
+       * @param {object} The params object which can contain
+       *   endPoint {string} The default endpoint for RPC requests
+       *   namespace {string} The default namespace for RPC requests
        */
       setup: function(params) {
         this._validateConfigParams(params);
@@ -30,8 +30,8 @@
        * (endPoint or namespace) and ensure it gets set back to what it was before
        *
        * @param {object} The params object which can contains
-       *   {string} endPoint The default endpoint for RPC requests
-       *   {string} namespace The default namespace for RPC requests
+       *   endPoint {string} The default endpoint for RPC requests
+       *   namespace {string} The default namespace for RPC requests
        * @param {function} callback The function to call with the new params in place
        */
       withOptions: function(params, callback) {
