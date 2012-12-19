@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    
+
   module("parameter validation");
 
   test("when empty", function() {
@@ -64,7 +64,7 @@ $(document).ready(function(){
     catch(e) {
       errMsg = e;
     }
-    ok(errMsg, "should raise an error"); 
+    ok(errMsg, "should raise an error");
   });
 
   test("with a callback and namespace param set", function() {
@@ -226,7 +226,7 @@ $(document).ready(function(){
         start();
       }
     });
-    
+
   });
 
   module("batchRequest");
@@ -273,7 +273,7 @@ $(document).ready(function(){
         start();
       }
     });
-    
+
   });
 
 });
