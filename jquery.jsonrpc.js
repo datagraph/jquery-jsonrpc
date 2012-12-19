@@ -221,7 +221,17 @@
       // Handles calling of error callback function
       _requestError: function(json, error) {
         if (error !== undefined && typeof(error) === 'function') {
+          if(typeof(json.responseText) === 'string') {
+            try {
+              error(eval ( '(' + json.responseText + ')' ));
+            }
+            catch(e) {
+              error(this._response());
+            }
+          }
+          else {
             error(this._response());
+          }
         }
       },
 
