@@ -200,7 +200,12 @@
       _requestUrl: function(url, cache) {
         url = url || this.endPoint;
         if (!cache) {
-            url += '?tm=' + new Date().getTime();
+            if (url.indexOf("?") < 0) {
+              url += '?tm=' + new Date().getTime();
+            }
+            else {
+              url += "&tm=" + new Date().getTime();
+            }
         }
         return url;
       },
