@@ -183,7 +183,7 @@
           async: false !== options.async,
           dataType: 'json',
           contentType: 'application/json',
-          url: this._requestUrl(options.url, options.cache),
+          url: this._requestUrl((options.endPoint || options.url), options.cache),
           data: data,
           cache: options.cache,
           processData: false,

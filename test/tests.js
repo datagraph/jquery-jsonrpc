@@ -229,6 +229,25 @@ $(document).ready(function(){
 
   });
 
+  test("with a valid method, valid params, valid callbacks, and an overriden url specified as 'endPoint'", function() {
+    expect(1);
+    stop();
+    $.jsonRPC.endPoint = 'data/invalid.js'
+    $.jsonRPC.request('test', {
+      params: ['param'],
+      endPoint: 'data/valid.js',
+      error: function(json) {
+        ok(false, "should not execute error callback");
+        start();
+      },
+      success: function(json) {
+        ok(true, "should execute success callback");
+        start();
+      }
+    });
+
+  });
+
   module("batchRequest");
 
   test("with invalid requests object", function() {
