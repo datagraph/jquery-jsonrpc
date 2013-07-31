@@ -26,7 +26,7 @@
         this._validateConfigParams(params);
         this.endPoint = params.endPoint;
         this.namespace = params.namespace;
-        this.cache = params.cache !== undefined ? cache : true;
+        this.cache = params.cache !== undefined ? params.cache : true;
         return this;
       },
 
