@@ -43,8 +43,9 @@
         this._validateConfigParams(params);
 
         // No point in running if there isn't a callback received to run
-        if(callback === undefined)
+        if(callback === undefined) {
           throw("No callback specified");
+        }
 
         origParams = {endPoint: this.endPoint, namespace: this.namespace};
         this.setup(params);
@@ -113,8 +114,9 @@
         }
 
         // Ensure our requests come in as an array
-        if(!$.isArray(requests) || requests.length === 0)
+        if(!$.isArray(requests) || requests.length === 0) {
           throw("Invalid requests supplied for jsonRPC batchRequest. Must be an array object that contain at least a method attribute");
+        }
 
         // Make sure each of our request objects are valid
         var _that = this;
