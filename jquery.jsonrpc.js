@@ -70,14 +70,17 @@
        * @return {undefined}
        */
       request: function(method, options) {
-        if(options === undefined)
+        if(options === undefined) {
            options = {};
+        }
 
-        if(options.id === undefined)
+        if(options.id === undefined) {
            options.id = 1;
+        }
 
-        if(options.cache === undefined)
+        if(options.cache === undefined) {
            options.cache = this.cache;
+        }
 
         // Validate method arguments
         this._validateRequestMethod(method);
@@ -105,8 +108,9 @@
        * @return {undefined}
        */
       batchRequest: function(requests, options) {
-        if(options === undefined)
+        if(options === undefined) {
            options = {};
+        }
 
         // Ensure our requests come in as an array
         if(!$.isArray(requests) || requests.length === 0)
@@ -118,8 +122,9 @@
           _that._validateRequestMethod(req.method);
           _that._validateRequestParams(req.params);
 
-          if(req.id === undefined)
+          if(req.id === undefined) {
              req.id = i + 1;
+          }
         });
         this._validateRequestCallbacks(options.success, options.error);
 
@@ -137,20 +142,24 @@
 
       // Validate a params hash
       _validateConfigParams: function(params) {
-        if(params === undefined)
+        if(params === undefined) {
           throw("No params specified");
+        }
 
-        if(params.endPoint && typeof(params.endPoint) !== 'string')
+        if(params.endPoint && typeof(params.endPoint) !== 'string') {
           throw("endPoint must be a string");
+        }
 
-        if(params.namespace && typeof(params.namespace) !== 'string')
+        if(params.namespace && typeof(params.namespace) !== 'string') {
           throw("namespace must be a string");
+        }
       },
 
       // Request method must be a string
       _validateRequestMethod: function(method) {
-        if(typeof(method) !== 'string')
+        if(typeof(method) !== 'string') {
           throw("Invalid method supplied for jsonRPC request")
+        }
 
         return true;
       },
@@ -160,19 +169,22 @@
         if(!(params === null ||
              params === undefined ||
              typeof(params) === 'object' ||
-             $.isArray(params)))
+             $.isArray(params))) {
           throw("Invalid params supplied for jsonRPC request. It must be empty, an object or an array.");
+        }
 
         return true;
       },
 
       // Make sure callbacks are either empty or a function
       _validateRequestCallbacks: function(success, error) {
-        if(success !== undefined && typeof(success) !== 'function')
+        if(success !== undefined && typeof(success) !== 'function') {
           throw("Invalid success callback supplied for jsonRPC request");
+        }
 
-        if(error !== undefined && typeof(error) !== 'function')
+        if(error !== undefined && typeof(error) !== 'function') {
           throw("Invalid error callback supplied for jsonRPC request");
+        }
 
         return true;
       },
@@ -219,8 +231,9 @@
           id: id
         }
 
-        if(params !== undefined)
+        if(params !== undefined) {
           dataObj.params = params;
+        }
 
         return dataObj;
       },
@@ -262,13 +275,14 @@
                 }
             }
 
-            if(data)
+            if(data) {
               response.error.data = data;
+            }
 
             return response;
           }
 
-          if(typeof(jqXHR.responseText) === 'string')
+          if(typeof(jqXHR.responseText) === 'string') {
             try
             {
               error(eval('('+jqXHR.responseText+')'));
@@ -277,9 +291,11 @@
             {
               error(create_response(jqXHR.responseText));
             }
+          }
 
-          else
+          else {
             error(create_response());
+          }
         }
       },
 
@@ -296,20 +312,23 @@
         }
 
         // Otherwise, successful request, run the success request if it exists
-        if(typeof(success) === 'function')
+        if(typeof(success) === 'function') {
           success(response);
+        }
       },
 
       // Returns a generic RPC 2.0 compatible response object
       _response: function(json) {
         try
         {
-          if(typeof(json) === 'string')
+          if(typeof(json) === 'string') {
             json = eval('('+json+')');
+          }
 
           if(($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0')
-          || (!$.isArray(json) && json.jsonrpc !== '2.0'))
+          || (!$.isArray(json) && json.jsonrpc !== '2.0')) {
             throw 'Version error';
+          }
 
           return json;
         }
