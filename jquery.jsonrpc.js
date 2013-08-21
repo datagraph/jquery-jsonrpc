@@ -189,8 +189,8 @@
           data: data,
           cache: options.cache,
           processData: false,
-          error: function(json) {
-            _that._requestError.call(_that, json, options.error);
+          error: function(jqXHR) {
+            _that._requestError.call(_that, jqXHR, options.error);
           },
           success: function(json) {
             _that._requestSuccess.call(_that, json, options.success, options.error);
@@ -226,18 +226,60 @@
       },
 
       // Handles calling of error callback function
-      _requestError: function(json, error) {
-        if (error !== undefined && typeof(error) === 'function') {
-          if(typeof(json.responseText) === 'string')
-            try {
-              error(eval ( '(' + json.responseText + ')' ));
+      _requestError: function(jqXHR, error) {
+        if(error !== undefined && typeof(error) === 'function')
+        {
+          function create_response(data)
+          {
+            var response =
+            {
+              version: '2.0'
+            };
+
+            switch(jqXHR.status)
+            {
+              case 400:
+                response.error =
+                {
+                  code:    -32600,
+                  message: 'Invalid Request'
+                }
+                break
+
+              case 404:
+                response.error =
+                {
+                  code:    -32601,
+                  message: 'Method not found'
+                }
+                break
+
+              default:
+                response.error =
+                {
+                  code:    -32603,
+                  message: 'Internal server error'
+                }
             }
-            catch(e) {
-              error(this._response());
+
+            if(data)
+              response.error.data = data;
+
+            return response;
+          }
+
+          if(typeof(jqXHR.responseText) === 'string')
+            try
+            {
+              error(eval('('+jqXHR.responseText+')'));
+            }
+            catch(e)
+            {
+              error(create_response(jqXHR.responseText));
             }
 
           else
-            error(this._response());
+            error(create_response());
         }
       },
 
@@ -260,32 +302,33 @@
 
       // Returns a generic RPC 2.0 compatible response object
       _response: function(json) {
-        if (json === undefined)
-          return {
-            error: 'Internal server error',
-            version: '2.0'
-          };
+        try
+        {
+          if(typeof(json) === 'string')
+            json = eval('('+json+')');
 
-        try {
-          if(typeof(json) === 'string') {
-            json = eval ( '(' + json + ')' );
-          }
-
-          if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
-              (!$.isArray(json) && json.jsonrpc !== '2.0')) {
+          if(($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0')
+          || (!$.isArray(json) && json.jsonrpc !== '2.0'))
             throw 'Version error';
-          }
 
           return json;
         }
-        catch (e) {
-          return {
-            error: 'Internal server error: ' + e,
+        catch(e)
+        {
+          var response =
+          {
+            error:
+            {
+              code: -32603,
+              message: 'Internal server error',
+              data: e
+            },
             version: '2.0'
-          }
+          };
+
+          return response;
         }
       }
-
     }
   });
 })(jQuery);
