@@ -1,0 +1,18 @@
+{
+  "name": "jquery-jsonrpc",
+  "version": "0.1.0",
+  "homepage": "https://github.com/datagraph/jquery-jsonrpc",
+  "description": "A JSON RPC 2.0 client for jQuery",
+  "main": "jquery.jsonrpc.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "jquery",
+    "jsonrpc"
+  ],
+  "license": "Unlicense",
+  "dependencies": {
+    "jquery": ">=1.4"
+  }
+}
