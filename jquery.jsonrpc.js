@@ -41,8 +41,11 @@
        */
       withOptions: function(params, callback) {
         this._validateConfigParams(params);
+
         // No point in running if there isn't a callback received to run
-        if(callback === undefined) throw("No callback specified");
+        if(callback === undefined) {
+          throw("No callback specified");
+        }
 
         origParams = {endPoint: this.endPoint, namespace: this.namespace};
         this.setup(params);
@@ -69,13 +72,15 @@
        */
       request: function(method, options) {
         if(options === undefined) {
-          options = { id: 1 };
+           options = {};
         }
-        if (options.id === undefined) {
-          options.id = 1;
+
+        if(options.id === undefined) {
+           options.id = 1;
         }
-        if (options.cache === undefined) {
-          options.cache = this.cache;
+
+        if(options.cache === undefined) {
+           options.cache = this.cache;
         }
 
         // Validate method arguments
@@ -105,19 +110,22 @@
        */
       batchRequest: function(requests, options) {
         if(options === undefined) {
-          options = {};
+           options = {};
         }
 
         // Ensure our requests come in as an array
-        if(!$.isArray(requests) || requests.length === 0) throw("Invalid requests supplied for jsonRPC batchRequest. Must be an array object that contain at least a method attribute");
+        if(!$.isArray(requests) || requests.length === 0) {
+          throw("Invalid requests supplied for jsonRPC batchRequest. Must be an array object that contain at least a method attribute");
+        }
 
         // Make sure each of our request objects are valid
         var _that = this;
         $.each(requests, function(i, req) {
           _that._validateRequestMethod(req.method);
           _that._validateRequestParams(req.params);
-          if (req.id === undefined) {
-            req.id = i + 1;
+
+          if(req.id === undefined) {
+             req.id = i + 1;
           }
         });
         this._validateRequestCallbacks(options.success, options.error);
@@ -139,19 +147,22 @@
         if(params === undefined) {
           throw("No params specified");
         }
-        else {
-          if(params.endPoint && typeof(params.endPoint) !== 'string'){
-            throw("endPoint must be a string");
-          }
-          if(params.namespace && typeof(params.namespace) !== 'string'){
-            throw("namespace must be a string");
-          }
+
+        if(params.endPoint && typeof(params.endPoint) !== 'string') {
+          throw("endPoint must be a string");
+        }
+
+        if(params.namespace && typeof(params.namespace) !== 'string') {
+          throw("namespace must be a string");
         }
       },
 
       // Request method must be a string
       _validateRequestMethod: function(method) {
-        if(typeof(method) !== 'string') throw("Invalid method supplied for jsonRPC request")
+        if(typeof(method) !== 'string') {
+          throw("Invalid method supplied for jsonRPC request")
+        }
+
         return true;
       },
 
@@ -163,15 +174,20 @@
              $.isArray(params))) {
           throw("Invalid params supplied for jsonRPC request. It must be empty, an object or an array.");
         }
+
         return true;
       },
 
+      // Make sure callbacks are either empty or a function
       _validateRequestCallbacks: function(success, error) {
-        // Make sure callbacks are either empty or a function
-        if(success !== undefined &&
-           typeof(success) !== 'function') throw("Invalid success callback supplied for jsonRPC request");
-        if(error !== undefined &&
-         typeof(error) !== 'function') throw("Invalid error callback supplied for jsonRPC request");
+        if(success !== undefined && typeof(success) !== 'function') {
+          throw("Invalid success callback supplied for jsonRPC request");
+        }
+
+        if(error !== undefined && typeof(error) !== 'function') {
+          throw("Invalid error callback supplied for jsonRPC request");
+        }
+
         return true;
       },
 
@@ -187,8 +203,8 @@
           data: data,
           cache: options.cache,
           processData: false,
-          error: function(json) {
-            _that._requestError.call(_that, json, options.error);
+          error: function(jqXHR) {
+            _that._requestError.call(_that, jqXHR, options.error);
           },
           success: function(json) {
             _that._requestSuccess.call(_that, json, options.success, options.error);
@@ -199,14 +215,13 @@
       // Determines the appropriate request URL to call for a request
       _requestUrl: function(url, cache) {
         url = url || this.endPoint;
-        if (!cache) {
-            if (url.indexOf("?") < 0) {
-              url += '?tm=' + new Date().getTime();
-            }
-            else {
-              url += "&tm=" + new Date().getTime();
-            }
+
+        if(!cache)
+        {
+          url += (url.indexOf("?") < 0) ? '?tm=' : "&tm=";
+          url += new Date().getTime();
         }
+
         return url;
       },
 
@@ -217,25 +232,71 @@
           method: this.namespace ? this.namespace +'.'+ method : method,
           id: id
         }
+
         if(params !== undefined) {
           dataObj.params = params;
         }
+
         return dataObj;
       },
 
       // Handles calling of error callback function
-      _requestError: function(json, error) {
-        if (error !== undefined && typeof(error) === 'function') {
-          if(typeof(json.responseText) === 'string') {
-            try {
-              error(eval ( '(' + json.responseText + ')' ));
+      _requestError: function(jqXHR, error) {
+        if(error !== undefined && typeof(error) === 'function')
+        {
+          function create_response(data)
+          {
+            var response =
+            {
+              version: '2.0'
+            };
+
+            switch(jqXHR.status)
+            {
+              case 400:
+                response.error =
+                {
+                  code:    -32600,
+                  message: 'Invalid Request'
+                }
+                break
+
+              case 404:
+                response.error =
+                {
+                  code:    -32601,
+                  message: 'Method not found'
+                }
+                break
+
+              default:
+                response.error =
+                {
+                  code:    -32603,
+                  message: 'Internal server error'
+                }
             }
-            catch(e) {
-              error(this._response());
+
+            if(data) {
+              response.error.data = data;
+            }
+
+            return response;
+          }
+
+          if(typeof(jqXHR.responseText) === 'string') {
+            try
+            {
+              error(eval('('+jqXHR.responseText+')'));
+            }
+            catch(e)
+            {
+              error(create_response(jqXHR.responseText));
             }
           }
+
           else {
-            error(this._response());
+            error(create_response());
           }
         }
       },
@@ -260,34 +321,35 @@
 
       // Returns a generic RPC 2.0 compatible response object
       _response: function(json) {
-        if (json === undefined) {
-          return {
-            error: 'Internal server error',
+        try
+        {
+          if(typeof(json) === 'string') {
+            json = eval('('+json+')');
+          }
+
+          if(($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0')
+          || (!$.isArray(json) && json.jsonrpc !== '2.0')) {
+            throw 'Version error';
+          }
+
+          return json;
+        }
+        catch(e)
+        {
+          var response =
+          {
+            error:
+            {
+              code: -32603,
+              message: 'Internal server error',
+              data: e
+            },
             version: '2.0'
           };
-        }
-        else {
-          try {
-            if(typeof(json) === 'string') {
-              json = eval ( '(' + json + ')' );
-            }
 
-            if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
-                (!$.isArray(json) && json.jsonrpc !== '2.0')) {
-              throw 'Version error';
-            }
-
-            return json;
-          }
-          catch (e) {
-            return {
-              error: 'Internal server error: ' + e,
-              version: '2.0'
-            }
-          }
+          return response;
         }
       }
-
     }
   });
 })(jQuery);
