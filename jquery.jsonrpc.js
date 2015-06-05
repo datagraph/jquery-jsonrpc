@@ -269,7 +269,7 @@
         else {
           try {
             if(typeof(json) === 'string') {
-              json = eval ( '(' + json + ')' );
+              json = JSON.parse(json);
             }
 
             if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
