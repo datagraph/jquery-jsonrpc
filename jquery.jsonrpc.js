@@ -228,7 +228,7 @@
         if (error !== undefined && typeof(error) === 'function') {
           if(typeof(json.responseText) === 'string') {
             try {
-              error(eval ( '(' + json.responseText + ')' ));
+              error(JSON.parse(json.responseText));
             }
             catch(e) {
               error(this._response());
