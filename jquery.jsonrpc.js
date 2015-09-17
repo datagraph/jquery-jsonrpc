@@ -228,7 +228,7 @@
         if (error !== undefined && typeof(error) === 'function') {
           if(typeof(json.responseText) === 'string') {
             try {
-              error(eval ( '(' + json.responseText + ')' ));
+              error(JSON.parse(json.responseText));
             }
             catch(e) {
               error(this._response());
@@ -269,7 +269,7 @@
         else {
           try {
             if(typeof(json) === 'string') {
-              json = eval ( '(' + json + ')' );
+              json = JSON.parse(json);
             }
 
             if (($.isArray(json) && json.length > 0 && json[0].jsonrpc !== '2.0') ||
