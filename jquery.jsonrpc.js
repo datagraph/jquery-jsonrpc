@@ -179,7 +179,7 @@
       _doRequest: function(data, options) {
         var _that = this;
         $.ajax({
-          type: 'POST',
+          method: 'POST',
           async: false !== options.async,
           dataType: 'json',
           contentType: 'application/json',
